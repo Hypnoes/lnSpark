@@ -1,5 +1,7 @@
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
+import org.apache.spark.rdd
+import org.apache.spark.rdd._
 
 object liuliang {
 
@@ -13,7 +15,7 @@ object liuliang {
 
         val spark = new SparkContext("spark://10.170.31.120:7077", "liuliang")
         val fs = spark.textFile("hdfs://10.170.31.120:9000/user/hypnoes/liuliang.txt")
-        args[0] match {
+        args(0) match {
             case "-i" => default(fs, r2).saveAsTextFile(ans + "-in")
             case "-o" => default(fs, r3).saveAsTextFile(ans + "-out")
             case _    => default(fs, r1).saveAsTextFile(ans)
@@ -22,7 +24,7 @@ object liuliang {
     }
 
     // Default
-    def default(fs: RDD[String], r: String): RDD[String] = {
+    def default(fs: RDD[String], r: scala.util.matching.Regex): RDD[(String, Int)] = {
         fs.flatMap(line => r.findAllIn(line)).flatMap(line => line.split(" > ")).map(word => 
             (word, 1)).reduceByKey(_+_)
     }
