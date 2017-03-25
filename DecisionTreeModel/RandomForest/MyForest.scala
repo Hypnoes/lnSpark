@@ -14,10 +14,8 @@ object MyForest {
         val conf = new SparkConf().setAppName("MyForest")
         val sc = new SparkContext(conf)
 
-        val input = args[0]
-
         //由原始数据生成LabeledPoint数据
-        val rawData = sc.textFile("hdfs://10.170.31.120:9000"+ input)
+        val rawData = sc.textFile("hdfs://10.170.31.120:9000"+ args[0])
 
         val data = rawData.map { line => 
             val values = line.split(',').map(_.toDouble)
