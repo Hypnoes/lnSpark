@@ -11,33 +11,22 @@ object liuliang {
         val r1 = """((\d{1,3}\.){3}\d{1,3}\.?[\w\-]{0,}(\s>\s)?){2}""".r // Find all IP and counting
         val r2 = """(\d{1,3}\.){3}\d{1,3}\.?[\w\-]{0,}(\s>\s)""".r       // Find Only Sender
         val r3 = """(\s>\s)(\d{1,3}\.){3}\d{1,3}\.?[\w\-]{0,}""".r       // Find Only Receiver
-        val ans = "hdfs://10.170.31.120:9000/user/hypnoes/ans"
 
         val spark = new SparkContext("spark://10.170.31.120:7077", "liuliang")
         val fs = spark.textFile("hdfs://10.170.31.120:9000/user/hypnoes/liuliang.txt")
+        val meth = default(fs)(_, _)
         args(0) match {
-            case "-i" => default(fs, r2).saveAsTextFile(ans + "-in")
-            case "-o" => default(fs, r3).saveAsTextFile(ans + "-out")
-            case _    => default(fs, r1).saveAsTextFile(ans)
+            case "-o" => meth(r3, 3)
+            case "-i" => meth(r2, 2)
+            case "-d" => meth(r1, 0)
+            case _    => meth(r1, 1)
             }
         spark.stop()
     }
 
-    // Default
-    def default(fs: RDD[String], r: scala.util.matching.Regex): RDD[(String, Int)] = {
-        fs.flatMap(line => r.findAllIn(line)).flatMap(line => line.split(" > ")).map(word => 
-            (word, 1)).reduceByKey(_+_)
-    }
-
-    // V3: Record the direction.
-    def directed(fs: RDD[String]): Unit = {
-        val r = """((\d{1,3}\.){3}\d{1,3}\.?[\w\-]{0,}(\s>\s)?){2}""".r
-        val ofs = fs.flatMap(line => r.findAllIn(line)).map(word => (word, 1)).reduceByKey(_+_)
-        ofs.saveAsTextFile("hdfs://10.170.31.120:9000/user/hypnoes/ans")
-    }
-
-    // V4: Sorting?
-    def sort(): Unit = {
-        // TO DO HERE...
+    // Default Method.
+    def default(fs: RDD[String])(r: scala.util.matching.Regex, mod: Int = 0): Unit = {
+        fs.flatMap(line => r.findAllIn(line)).flatMap(line => if(mod > 0) line else line.split(" > ")).map(word =>
+            (word, 1)).reduceByKey(_+_).sortBy(x => x._2, false).saveAsTextFile("hdfs://10.170.31.120:9000/user/hypnoes/ans")
     }
 }
