@@ -9,7 +9,7 @@ object Main {
     def main(args: Array[String]) {
         val conf = new SparkConf().setAppName("test")
         val sc = new SparkContext(conf)
-        val rawData = sc.textFile("hdfs://10.170.31.120:9000/user/caox/kddcup.data")
+        val rawData = sc.textFile("hdfs://10.170.31.120:9000/user/hypnoes/kddcup.data")
         rawData.map(_.split(',').last).countByValue().toSeq.
         sortBy(_._2).reverse.foreach(println)
 
