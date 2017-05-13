@@ -24,7 +24,8 @@ object BisectingKMeansExample {
 
     // $example on$
     // Loads data.
-    val dataset = spark.read.format("libsvm").load("data/mllib/sample_kmeans_data.txt")
+    val root = "hdfs://master:9000/user/hypnoes/"
+    val dataset = spark.read.format("libsvm").load(root + "data/mllib/sample_kmeans_data.txt")
 
     // Trains a bisecting k-means model.
     val bkm = new BisectingKMeans().setK(2).setSeed(1)

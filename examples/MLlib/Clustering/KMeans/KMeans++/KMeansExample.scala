@@ -24,7 +24,8 @@ object KMeansExample {
 
     // $example on$
     // Loads data.
-    val dataset = spark.read.format("libsvm").load("data/mllib/sample_kmeans_data.txt")
+    val root = "hdfs://master:9000/user/hypnoes/"
+    val dataset = spark.read.format("libsvm").load(root + "data/mllib/sample_kmeans_data.txt")
 
     // Trains a k-means model.
     val kmeans = new KMeans().setK(2).setSeed(1L)
