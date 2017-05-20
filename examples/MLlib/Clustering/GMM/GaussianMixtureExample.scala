@@ -15,6 +15,7 @@ import org.apache.spark.sql.SparkSession
  */
 
 object GaussianMixtureExample {
+
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
         .builder
@@ -24,7 +25,7 @@ object GaussianMixtureExample {
     // $example on$
     // Loads data
     val root = "hdfs://10.170.31.120:9000/user/hypnoes/"
-    val dataset = spark.read.format("libsvm").load(root + "data/mllib/sample_kmeans_data.txt")
+    val dataset = spark.read.format("libsvm").load(root + "sample_kmeans_data.txt")
 
     // Trains Gaussian Mixture Model
     val gmm = new GaussianMixture()

@@ -2,11 +2,11 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.mllib.clustering.{KMeans, KMeansModel}
 import org.apache.spark.mllib.linalg.Vectors
 
-object KMeansExample {
+object CusModelCluster {
 
   def main(args: Array[String]) {
 
-    val conf = new SparkConf().setAppName("KMeansExample")
+    val conf = new SparkConf().setAppName(s"${this.getClass.getSimpleName}")
     val sc = new SparkContext(conf)
 
     val data = sc.textFile("hdfs://10.170.31.120:9000/user/hypnoes/out.txt")

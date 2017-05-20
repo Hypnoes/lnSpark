@@ -14,7 +14,7 @@ object EstimatorTransformerParamExample {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession
       .builder
-      .appName("EstimatorTransformerParamExample")
+      .appName(s"${this.getClass.getSimpleName}")
       .getOrCreate()
 
     // $example on$
