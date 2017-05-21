@@ -31,12 +31,9 @@ object PoweringChengDu {
     }
 
     def writeOut(model: KMeansModel, name: String): Unit = {
-        println("")
-        println("=======================" + name + "===========================")
-        println("Cluster Centers: ")
+        println("[" + name.split("_svm")(0) + "]")
         model.clusterCenters.foreach(println)
-        println("=======================" + name + "===========================")
-        println("")
+        println()
     }
 }
 
