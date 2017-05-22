@@ -22,9 +22,7 @@ object PoweringChengDu {
     def train(df: DataFrame, name: String): Unit = {
         val kmm = new KMeans().setK(3)
         val model = kmm.fit(df)
-
         writeOut(model, name)
-
         model.transform(df).write
             .json("hdfs://10.170.31.120:9000/user/hypnoes/"
                 + "out/" + name.split("svm")(0) + "a")
