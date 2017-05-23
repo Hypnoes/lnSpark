@@ -1,6 +1,5 @@
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.{Dataset, DataFrame}
-import org.apache.spark.ml.clustering.{KMeans, KMeansModel}
+import org.apache.spark.ml.clustering.KMeans
 import org.apache.spark.ml.linalg.Vectors
 
 object PoweringChengDu {
@@ -9,29 +8,24 @@ object PoweringChengDu {
             .builder
             .appName(s"${this.getClass.getSimpleName}")
             .getOrCreate()
+        import spark.implicits._
 
         val root = "hdfs://10.170.31.120:9000/user/hypnoes/"
         args.foreach(input => {
-            train(spark.read.format("libsvm").load(root + "SVM_Data/" +input),
-                input)
+            val df = spark.read.format("libsvm").load(root + "SVM_Data/" +input)
+            val kmm = new KMeans().setK(3)
+            val model = kmm.fit(df)
+            model.clusterCenters.toSeq.map(x => col(x)).toDS.write
+                .json("hdfs://10.170.31.120:9000/user/hypnoes/"
+                    + "out/" + input.split("svm")(0) + "c")
+            model.transform(df).write
+                .json("hdfs://10.170.31.120:9000/user/hypnoes/"
+                    + "out/" + input.split("svm")(0) + "a")
         })
-
+        
         spark.stop()
     }
-
-    def train(df: DataFrame, name: String): Unit = {
-        val kmm = new KMeans().setK(3)
-        val model = kmm.fit(df)
-        writeOut(model, name)
-        model.transform(df).write
-            .json("hdfs://10.170.31.120:9000/user/hypnoes/"
-                + "out/" + name.split("svm")(0) + "a")
-    }
-
-    def writeOut(model: KMeansModel, name: String): Unit = {
-        println("[" + name.split("_svm")(0) + "]")
-        model.clusterCenters.foreach(println)
-        println()
-    }
+        
+    case class col(center: org.apache.spark.ml.linalg.Vector)
 }
 
