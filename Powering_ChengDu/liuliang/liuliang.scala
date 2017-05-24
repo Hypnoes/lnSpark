@@ -13,8 +13,8 @@ object liuliang {
         val r3 = """(\s>\s)(\d{1,3}\.){3}\d{1,3}\.?[\w\-]{0,}""".r       
         val r4 = """(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.?[\w\-]{0,}""".r
 
-        val spark = new SparkContext("spark://10.170.31.120:7077", "liuliang")
-        val fs = spark.textFile("hdfs://10.170.31.120:9000/user/songling/item/liuliang.txt")
+        val spark = new SparkContext("spark://10.170.31.120:7077", "hypnoes")
+        val fs = spark.textFile("hdfs://10.170.31.120:9000/user/hypnoes/liuliang.txt")
         val meth1 = default(fs)(_,_)
         val meth2 = direct(fs)(_)
         val meth3 = firewall(fs)(_,_,_)
@@ -32,13 +32,13 @@ object liuliang {
     // Default Method.
     def default(fs: RDD[String])(r: scala.util.matching.Regex, name: String): Unit = {
         fs.flatMap(line => r.findAllIn(line)).flatMap(line => line.split(" > ")).map(word =>
-            (word, 1)).reduceByKey(_+_).sortBy(x => x._2, false).saveAsTextFile("hdfs://10.170.31.120:9000/user/songling/item/ans-" + name)
+            (word, 1)).reduceByKey(_+_).sortBy(x => x._2, false).saveAsTextFile("hdfs://10.170.31.120:9000/user/hypnoes/ans-" + name)
     }
 
     // Directed Method.
     def direct(fs: RDD[String])(r: scala.util.matching.Regex): Unit = {
         fs.flatMap(line => r.findAllIn(line)).map(word => 
-        (word, 1)).reduceByKey(_+_).sortBy(x => x._2, false).saveAsTextFile("hdfs://10.170.31.120:9000/user/songling/item/ans-default")
+        (word, 1)).reduceByKey(_+_).sortBy(x => x._2, false).saveAsTextFile("hdfs://10.170.31.120:9000/user/hypnoes/ans-default")
     }
     // Firewall Method.
     def firewall(fs: RDD[String])(r1: scala.util.matching.Regex, r2: scala.util.matching.Regex, name: String): Unit = {
@@ -58,6 +58,6 @@ object liuliang {
               case _ =>  word
             }
         }
-        after_wall.reduceByKey(_+_).sortBy(x => x._2, false).saveAsTextFile("hdfs://10.170.31.120:9000/user/songling/item/ans-" + name)
+        after_wall.reduceByKey(_+_).sortBy(x => x._2, false).saveAsTextFile("hdfs://10.170.31.120:9000/user/hypnoes/ans-" + name)
     }
 } 
