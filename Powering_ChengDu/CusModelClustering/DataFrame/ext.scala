@@ -15,7 +15,9 @@ object PoweringChengDu {
             val df = spark.read.format("libsvm").load(root + "SVM_Data/" +input)
             val kmm = new KMeans().setK(3)
             val model = kmm.fit(df)
-            model.clusterCenters.toSeq.map(x => col(x)).toDS.write
+            val ce = model.clusterCenters.toSeq.map(x => col(x)).toDS
+            
+            model.transform(ce).write
                 .json("hdfs://10.170.31.120:9000/user/hypnoes/"
                     + "out/" + input.split("svm")(0) + "c")
             model.transform(df).write
@@ -26,6 +28,6 @@ object PoweringChengDu {
         spark.stop()
     }
         
-    case class col(center: org.apache.spark.ml.linalg.Vector)
+    case class col(features: org.apache.spark.ml.linalg.Vector)
 }
 
