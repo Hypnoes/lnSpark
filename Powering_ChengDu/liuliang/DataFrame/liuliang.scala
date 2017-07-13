@@ -18,6 +18,5 @@ object Liuliang {
         df.write.json(root + "blas")
 
         spark.stop()
-
     }
 }

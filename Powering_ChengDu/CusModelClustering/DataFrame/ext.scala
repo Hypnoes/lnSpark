@@ -18,11 +18,9 @@ object PoweringChengDu {
             val ce = model.clusterCenters.toSeq.map(x => col(x)).toDS
             
             model.transform(ce).write
-                .json("hdfs://10.170.31.120:9000/user/hypnoes/"
-                    + "out/" + input.split("svm")(0) + "c")
+                .json(root+ "out/" + input.split("svm")(0) + "c")
             model.transform(df).write
-                .json("hdfs://10.170.31.120:9000/user/hypnoes/"
-                    + "out/" + input.split("svm")(0) + "a")
+                .json(root+ "out/" + input.split("svm")(0) + "a")
         })
         
         spark.stop()
