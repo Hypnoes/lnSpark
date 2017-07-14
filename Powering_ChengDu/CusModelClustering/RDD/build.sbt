@@ -1,6 +1,6 @@
 lazy val root = (project in file(".")).
     settings(
-        name := "PoweringChengDu",
+        name := "CusModClu",
         version := "1.0",
         scalaVersion := "2.11.8",
         libraryDependencies ++= Seq(
