@@ -29,10 +29,10 @@ object CusFlowStA {
         spark.stop()
     }
 
-    case class User (date:java.sql.Date, value:Double) {
-        implicit def toTime(stringDate:String):java.sql.Date = {
-            val sdf = new java.text.SimpleDateFormat("yyyy/MM/dd")
-            return new java.sql.Date(sdf.parse(stringDate).getTime())
-        }
+    case class User (date:java.sql.Date, value:Double)
+            
+    implicit def toTime(stringDate:String):java.sql.Date = {
+        val sdf = new java.text.SimpleDateFormat("yyyy/MM/dd")    
+        return new java.sql.Date(sdf.parse(stringDate).getTime())        
     }
 }
