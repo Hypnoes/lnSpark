@@ -9,3 +9,8 @@ project/*
 
 target
 project
+
+.ensime
+.ensime_cache/
+
+*.log

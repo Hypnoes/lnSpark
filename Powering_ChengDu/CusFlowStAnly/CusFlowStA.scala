@@ -1,3 +1,5 @@
+import scala.language.implicitConversions
+
 import org.apache.spark.sql.SparkSession
 
 object CusFlowStA {
@@ -18,21 +20,21 @@ object CusFlowStA {
                     .map(x => User(x.data.split(" ").apply(0), x.value))
                     .groupBy("date").avg("value").sort("date")
 
-        val arr = dsb.select("avg(value)").as[Double].collect
+        val arr = dsa.select("avg(value)").as[Double].collect
         val dif = (arr.drop(1) ++: arr.head()).diff(arr).dropRight(1)
         dif.flatmap(x => if (x * 0.2 > 
             dif(if (dif.indexOf(x) == 0) dif.indexOf(x) else dif.indexOf(x) - 1 )) 
             (x, "x") else (x, "o"))
 
-        dif.toList.toDS().write.json(root + args(2))
+        dif.toList.toDS.write.json(root + args(2))
         
         spark.stop()
     }
-
-    case class User (date:java.sql.Date, value:Double)
             
-    implicit def toTime(stringDate:String):java.sql.Date = {
+    implicit def toTime(stringDate: String): java.sql.Date = {
         val sdf = new java.text.SimpleDateFormat("yyyy/MM/dd")    
         return new java.sql.Date(sdf.parse(stringDate).getTime())        
     }
+
+    case class User (date: java.sql.Date, value: Double)
 }
