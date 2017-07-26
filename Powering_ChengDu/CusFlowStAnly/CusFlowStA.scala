@@ -23,7 +23,7 @@ object CusFlowStA {
         val arr = dsa.select("avg(value)").as[Double].collect
         val dif = (arr.drop(1) ++: arr.head()).diff(arr).dropRight(1)
         dif.flatmap(x => if (x * 0.2 > 
-            dif(if (dif.indexOf(x) == 0) dif.indexOf(x) else dif.indexOf(x) - 1 )) 
+            dif(if (dif.indexOf(x) == 0) 0 else dif.indexOf(x) - 1 )) 
             (x, "x") else (x, "o"))
 
         dif.toList.toDS.write.json(root + args(2))

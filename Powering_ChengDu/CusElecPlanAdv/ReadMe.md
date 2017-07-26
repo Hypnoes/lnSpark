@@ -6,6 +6,7 @@
 
 ## @content
     ...
+    基本上就确定用GBDT了。(并没有充分的利用)
 
 ## @footer
 > __Author__: Hypnoes
